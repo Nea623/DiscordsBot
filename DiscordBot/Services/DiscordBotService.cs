@@ -54,6 +54,7 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
             {
                 // ApplicationCommands の登録をここで行う。
                 await interactions.RegisterCommandsToGuildAsync(ulong.Parse(configuration["DiscordBot:GuildId"] ?? ""));
+                await interactions.RegisterCommandsToGuildAsync(ulong.Parse(configuration["DiscordBot:GuildId2"] ?? ""));
             }
             catch (Exception ex)
             {
