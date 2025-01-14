@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Win32.SafeHandles;
 
 namespace DiscordBot.Services;
 
@@ -12,10 +13,15 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
         interactions.Log += Log;
 
         client.Ready += Ready;
+        client.UserJoined += OnUserJoined;
 
         await interactionHandler.InitializeAsync();
         await client.LoginAsync(TokenType.Bot, configuration["DiscordBot:Token"]);
         await client.StartAsync();
+        //Botのステータス
+        await client.SetStatusAsync(UserStatus.AFK);
+        //カスタムステータス
+        await client.SetGameAsync("テスト中...");
 
         await Task.Delay(-1, cancellationToken);
     }
@@ -60,6 +66,28 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
             {
                 logger.LogError(ex, "{Message}", ex.Message);
             }
+        });
+
+        return Task.CompletedTask;
+    }
+
+    //新規ユーザーがサーバーに入室したときにコメントするやつ。
+    private Task OnUserJoined(SocketGuildUser user)
+    {
+        _ = Task.Run(async () =>
+        {
+            SocketGuild guild = user.Guild;
+            string avatar = user.GetAvatarUrl();
+
+            var embedBuilder = new EmbedBuilder()
+                .WithTitle("新規ユーザーが入室しました！")
+                .WithDescription($"{user.Mention}さん、**{user.Guild.Name}**へようこそ！\n" +
+                                 $"あなたは{guild.MemberCount - guild.Users.Count(x => x.IsBot)}人目のメンバーです。\n" +
+                                 $"新規さんを歓迎しよう🎉")
+                .WithThumbnailUrl(avatar)
+                .WithColor(0x8DCE3E);
+
+            await (user.Guild.SystemChannel).SendMessageAsync(embed: embedBuilder.Build());
         });
 
         return Task.CompletedTask;

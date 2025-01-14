@@ -31,9 +31,10 @@ builder.Services.AddSingleton(new DiscordSocketClient(
         GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers | GatewayIntents.GuildPresences | GatewayIntents.MessageContent,
         FormatUsersInBidirectionalUnicode = false,
         UseInteractionSnowflakeDate = false,
-        AlwaysDownloadUsers = false,
+        AlwaysDownloadUsers = true,
         LogGatewayIntentWarnings = false,
         LogLevel = LogSeverity.Info
+        
     }
 ));
 

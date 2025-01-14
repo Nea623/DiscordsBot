@@ -1,18 +1,29 @@
-﻿namespace DiscordBot.Modules.OtherModules;
+﻿using Discord.Commands;
+using System.Net.NetworkInformation;
+
+namespace DiscordBot.Modules.OtherModules;
 
 public class PingModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("ping", "pingを計測します。")]
-    public async Task PingCommandAsync()
+    public async Task PingCommandAsync(string url = "discord.com")
     {
-        var latency = (DateTime.UtcNow - Context.Interaction.CreatedAt).Milliseconds;
-        var embedBuilder = new EmbedBuilder()
-            .WithTitle("結果 :ping_pong:")
-            .WithDescription($"**API Endpoint Ping**: {latency}ms\n" +
-                $"**WebSocket Ping**: {Context.Client.Latency}ms")
-            .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
-            .WithColor(0x8DCE3E);
+        using (var ping = new Ping())
+        {
+            var result = ping.Send(url);
 
-        await RespondAsync(embed: embedBuilder.Build());
+            if (result.Status == IPStatus.Success)
+            {
+                var embedBuilder = new EmbedBuilder()
+                    .WithTitle("Pong! :ping_pong:")
+                    .AddField("送信したURL", url, true)
+                    .AddField("かかった時間", result.RoundtripTime + "ms", true)
+                    .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
+                    .WithColor(0x8DCE3E);
+
+                await RespondAsync(embed: embedBuilder.Build());
+            }
+            else await RespondAsync("失敗: pingの送信に失敗しました。");
+        }
     }
 }
