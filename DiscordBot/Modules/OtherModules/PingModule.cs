@@ -1,5 +1,4 @@
-﻿using Discord.Commands;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 
 namespace DiscordBot.Modules.OtherModules;
 
