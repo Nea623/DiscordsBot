@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Modules;
+﻿namespace DiscordBot.Modules.OtherModules;
 
 public class PingModule : InteractionModuleBase<SocketInteractionContext>
 {

@@ -1,9 +1,9 @@
-﻿namespace DiscordBot.Modules;
+﻿namespace DiscordBot.Modules.UserModules;
 
-public class AvatarModule : InteractionModuleBase<SocketInteractionContext>
+public class UserAvatarModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("avatar", "指定されたユーザーのアバターを表示します。")]
-    public async Task AvatarCommandAsync(IUser? user = null)
+    public async Task UserAvatarCommandAsync(IUser? user = null)
     {
         user = user ?? Context.User;
 
