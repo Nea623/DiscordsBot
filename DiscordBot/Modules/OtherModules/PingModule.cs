@@ -4,8 +4,32 @@ namespace DiscordBot.Modules.OtherModules;
 
 public class PingModule : InteractionModuleBase<SocketInteractionContext>
 {
-    [SlashCommand("ping", "pingを計測します。")]
-    public async Task PingCommandAsync(string url = "discord.com")
+    /*
+     * 新pingコマンド(WebSocket PingとAPI Endpoint Pingを取得するもの)
+     *
+    [IntegrationType(ApplicationIntegrationType.GuildInstall | ApplicationIntegrationType.UserInstall)]
+    [SlashCommand("ping", "pingの計測を行います。")]
+    public async Task PingCommandAsync()
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("Pong! :ping_pong:")
+            .WithDescription($"WebSocket Ping: {Context.Client.Latency}ms\n")
+            .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
+            .WithColor(0x8DCE3E);
+
+        await RespondAsync(embed: embedBuilder.Build(), ephemeral: true);
+        var response = await GetOriginalResponseAsync();
+
+        var latency = (DateTime.UtcNow - response.CreatedAt).Milliseconds;
+        embedBuilder.Description += $"API Endpoint Ping: {latency}ms";
+
+        await ModifyOriginalResponseAsync(x => x.Embed = embedBuilder.Build());
+    }
+    */
+
+    // 旧pingコマンド(ただ単に、アクセスできるかどうか、レスポンスタイムを取得しているだけのもの)
+    [SlashCommand("ping", "pingを計測行います。")]
+    public async Task PingCommandAsync([Summary(description: "URLを指定してください。")] string url = "discord.com")
     {
         using (var ping = new Ping())
         {

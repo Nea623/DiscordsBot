@@ -3,7 +3,7 @@
 public class ChannelInfoModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("channelinfo", "チャンネルの情報を表示します。")]
-    public async Task TestSlashCommandAsync(IChannel channel)
+    public async Task ChannelInfoCommandAsync([Summary(description: "指定するチャンネルまたはカテゴリを選択してください。")] IChannel channel)
     {
         var embedBuilder = new EmbedBuilder()
             .WithDescription($"<#{channel.Id}>")

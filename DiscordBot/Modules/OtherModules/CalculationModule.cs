@@ -58,7 +58,7 @@ public class CalculationModule : InteractionModuleBase<SocketInteractionContext>
 
         if (c == 0)
         {
-            await RespondAsync("失敗: 0で割れねーよ！！");
+            await RespondAsync("失敗: 0では割れません。");
             return;
         }
         else

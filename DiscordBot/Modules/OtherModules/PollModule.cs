@@ -3,7 +3,7 @@
 public class PollModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("poll", "アンケート表を作成します。")]
-    public async Task PollCommandAsync(string title, string a = null, string b = null, string c = null, string d = null, string e = null, string f = null, string g = null, string h = null, string i = null, string j = null)
+    public async Task PollCommandAsync([Summary(description: "タイトルを入力してください。")] string Title, string A = null, string B = null, string C = null, string D = null, string E = null, string F = null, string G = null, string H = null, string I = null, string J = null)
     {
         await DeferAsync();
 
@@ -22,11 +22,11 @@ public class PollModule : InteractionModuleBase<SocketInteractionContext>
            .WithAuthor(Context.User.Username,
                        Context.User.GetAvatarUrl() ?? Context.User.GetDefaultAvatarUrl());
 
-        embed.WithTitle(title);
+        embed.WithTitle(Title);
 
         string description = null;
 
-        string[] x = new string[] { a, b, c, d, e, f, g, h, i, j };
+        string[] x = [A, B, C, D, E, F, G, H, I, J];
         x = x.Where(y => y != null).ToArray();
 
         IEmote[] emotes = new IEmote[x.Length];

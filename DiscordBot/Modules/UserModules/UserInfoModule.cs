@@ -5,7 +5,7 @@ namespace DiscordBot.Modules.UserModules;
 public class UserInfoModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("userinfo", "指定されたユーザーの情報を表示します。")]
-    public async Task UserInfoCommandAsync([Remainder] IGuildUser user = null)
+    public async Task UserInfoCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] [Remainder] IGuildUser user = null)
     {
         if (user is null) user = (IGuildUser)Context.User; // ユーザー未指定 --> 自分の情報が入る
 

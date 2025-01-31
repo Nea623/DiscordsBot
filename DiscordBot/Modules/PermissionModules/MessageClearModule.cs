@@ -5,7 +5,7 @@ public class MessageClearModule : InteractionModuleBase<SocketInteractionContext
     [SlashCommand("clear", "指定された数メッセージを削除します。")]
     [RequireBotPermission(GuildPermission.ManageMessages)]
     [RequireUserPermission(GuildPermission.ManageMessages)]
-    public async Task MessageClearCommandAsync(int delNumber)
+    public async Task MessageClearCommandAsync([Summary(description: "削除するメッセージの数を指定してください。")] int delNumber)
     {
         var channel = Context.Channel as SocketTextChannel;
         var items = await channel.GetMessagesAsync(delNumber).FlattenAsync();

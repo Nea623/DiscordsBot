@@ -3,7 +3,7 @@
 public class UserAvatarModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("avatar", "指定されたユーザーのアバターを表示します。")]
-    public async Task UserAvatarCommandAsync(IUser? user = null)
+    public async Task UserAvatarCommandAsync([Summary(description: "指定するユーザーを選択してください。")] IUser? user = null)
     {
         user = user ?? Context.User;
 
