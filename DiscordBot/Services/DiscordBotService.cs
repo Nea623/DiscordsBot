@@ -13,7 +13,7 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
         interactions.Log += Log;
 
         client.Ready += Ready;
-        client.UserJoined += OnUserJoined;
+        client.UserJoined += EventHandler;
 
         await interactionHandler.InitializeAsync();
         await client.LoginAsync(TokenType.Bot, configuration["DiscordBot:Token"]);
@@ -71,23 +71,12 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
         return Task.CompletedTask;
     }
 
-    //新規ユーザーがサーバーに入室したときにコメントするやつ。
-    private Task OnUserJoined(SocketGuildUser user)
+    // 常時起動しているBotのイベント
+    private Task EventHandler(SocketGuildUser user)
     {
         _ = Task.Run(async () =>
         {
-            SocketGuild guild = user.Guild;
-            string avatar = user.GetAvatarUrl();
-
-            var embedBuilder = new EmbedBuilder()
-                .WithTitle("新規ユーザーが入室しました！")
-                .WithDescription($"{user.Mention}さん、**{user.Guild.Name}**へようこそ！\n" +
-                                 $"あなたは{guild.MemberCount - guild.Users.Count(x => x.IsBot)}人目のメンバーです。\n" +
-                                 $"新規さんを歓迎しよう🎉")
-                .WithThumbnailUrl(avatar)
-                .WithColor(0x8DCE3E);
-
-            await (user.Guild.SystemChannel).SendMessageAsync(embed: embedBuilder.Build());
+            await new GuildService().WelcomeMessageAsync(user);
         });
 
         return Task.CompletedTask;

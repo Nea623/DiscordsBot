@@ -37,7 +37,7 @@ public class HelpModule(InteractionService interactionService) : InteractionModu
             embed.WithTitle(":information_source: | HANaBi -はなび- のヘルプ");
             embed.WithDescription("特定のコマンドの詳細情報は `/help [コマンド名]` を入力してください。");
             embed.AddField("サーバー数/Ping", $"`{Context.Client.Guilds.Count}`/`{Context.Client.Latency}ms`");
-            embed.AddField("Botを招待/サポートサーバー", "[`Botを招待`](https://discordapp.com/oauth2/authorize?client_id=1325369554456674406)/[`サポートサーバーに入る`](https://discord.gg/hSfV6CDFXy)");
+            embed.AddField("Botを招待/サポートサーバー", "[`Botを招待`](https://discord.com/oauth2/authorize?client_id=1325369554456674406&permissions=8&integration_type=0&scope=bot)/[`サポートサーバーに入る`](https://discord.gg/hSfV6CDFXy)");
             embed.WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl());
             embed.WithColor(0x8DCE3E);
         }
