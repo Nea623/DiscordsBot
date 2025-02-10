@@ -4,6 +4,9 @@ namespace DiscordBot.Modules.PermissionModules;
 
 public class KickModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 指定したユーザーを追放するコマンド
+    // </summary>
     [SlashCommand("kick", "指定したユーザーを追放します。")]
     [Discord.Commands.RequireBotPermission(GuildPermission.KickMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.KickMembers)]

@@ -7,7 +7,7 @@ public class UserInfoModule : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("userinfo", "指定されたユーザーの情報を表示します。")]
     public async Task UserInfoCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] [Remainder] IGuildUser user = null)
     {
-        if (user is null) user = (IGuildUser)Context.User; // ユーザー未指定 --> 自分の情報が入る
+        if (user is null) user = (IGuildUser)Context.User; // ユーザーが指定されていない場合は実行者の情報を表示する
 
         string avatar = user.GetAvatarUrl();
         string status = null;
@@ -24,7 +24,7 @@ public class UserInfoModule : InteractionModuleBase<SocketInteractionContext>
         {
             nickname = "なし";
         }
-        else nickname = user.Nickname;
+        else nickname = user.Nickname; // ニックネームがある場合はそのまま表示
 
         if (user.Status == UserStatus.Online) status = "オンライン"; // ステータスの変換処理
         if (user.Status == UserStatus.Offline) status = "オフライン";

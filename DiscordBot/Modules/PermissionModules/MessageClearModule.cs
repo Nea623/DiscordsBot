@@ -2,6 +2,9 @@
 
 public class MessageClearModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 指定された数メッセージを削除するコマンド
+    // </summary>
     [SlashCommand("clear", "指定された数メッセージを削除します。")]
     [RequireBotPermission(GuildPermission.ManageMessages)]
     [RequireUserPermission(GuildPermission.ManageMessages)]

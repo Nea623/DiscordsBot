@@ -27,6 +27,9 @@ public class HelpModule(InteractionService interactionService) : InteractionModu
         await ((SocketAutocompleteInteraction)Context.Interaction).RespondAsync(results.Take(25));
     }
 
+    // <summary>
+    // ヘルプを表示するコマンド
+    // <summary>
     [SlashCommand("help", "ヘルプを表示します。")]
     public async Task HelpModuleCommandAsync([Summary("command_name"), Autocomplete] string? command_name = null)
     {
@@ -43,7 +46,7 @@ public class HelpModule(InteractionService interactionService) : InteractionModu
         }
         else
         {
-            var commandInfo = _interactionService.SlashCommands.FirstOrDefault(x => x.GetHashCode().ToString() == command_name);
+            var commandInfo = _interactionService.SlashCommands.FirstOrDefault(x => x.GetHashCode().ToString() == command_name); // コマンド名からコマンド情報を取得
             if (commandInfo == null)
             {
                 await RespondAsync("コマンドが見つかりませんでした。");
@@ -52,6 +55,9 @@ public class HelpModule(InteractionService interactionService) : InteractionModu
 
             var groupName = !string.IsNullOrEmpty(commandInfo.Module.SlashGroupName) ? $"{commandInfo.Module.SlashGroupName} " : "";
             var groupName2 = !string.IsNullOrEmpty(commandInfo.Module.Parent?.SlashGroupName) ? $"{commandInfo.Module.Parent?.SlashGroupName} " : "";
+
+
+
 
             embed.WithTitle($"コマンド詳細 - {groupName2}{groupName}{commandInfo.Name}")
                 .WithDescription($"{commandInfo.Description}")

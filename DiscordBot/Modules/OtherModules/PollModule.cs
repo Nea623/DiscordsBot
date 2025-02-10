@@ -2,6 +2,9 @@
 
 public class PollModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // アンケート表を作成するコマンド
+    // </summary>
     [SlashCommand("poll", "アンケート表を作成します。")]
     public async Task PollCommandAsync([Summary(description: "タイトルを入力してください。")] string Title, string A = null, string B = null, string C = null, string D = null, string E = null, string F = null, string G = null, string H = null, string I = null, string J = null)
     {

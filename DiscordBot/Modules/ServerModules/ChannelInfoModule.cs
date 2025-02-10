@@ -2,6 +2,9 @@
 
 public class ChannelInfoModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // チャンネルの情報を表示するコマンド
+    // </summary>
     [SlashCommand("channelinfo", "チャンネルの情報を表示します。")]
     public async Task ChannelInfoCommandAsync([Summary(description: "指定するチャンネルまたはカテゴリを選択してください。")] IChannel channel)
     {
@@ -11,14 +14,17 @@ public class ChannelInfoModule : InteractionModuleBase<SocketInteractionContext>
             .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
             .WithColor(0x8DCE3E);
 
-        if (channel.GetChannelType() == ChannelType.Text)
-            await AddTextChannelFieldsAsync(embedBuilder, channel as ITextChannel);
-        else if (channel.GetChannelType() == ChannelType.Voice)
+        if (channel.GetChannelType() == ChannelType.Text) // テキストチャンネルの場合
+            await AddTextChannelFieldsAsync(embedBuilder, channel as ITextChannel); 
+        else if (channel.GetChannelType() == ChannelType.Voice) // ボイスチャンネルの場合
             AddVoiceChannelFields(embedBuilder, channel as IVoiceChannel);
 
         await RespondAsync(embed: embedBuilder.Build());
     }
 
+    // <summary>
+    // テキストチャンネルの情報を埋め込みに追加する
+    // </summary>
     private async Task AddTextChannelFieldsAsync(EmbedBuilder embedBuilder, ITextChannel textChannel)
     {
         var category = await textChannel.GetCategoryAsync();
@@ -29,6 +35,9 @@ public class ChannelInfoModule : InteractionModuleBase<SocketInteractionContext>
             .AddField("クールダウン", textChannel.SlowModeInterval == 0 ? "なし" : $"{textChannel.SlowModeInterval}秒");
     }
 
+    // <summary>
+    // ボイスチャンネルの情報を埋め込みに追加する
+    // </summary>
     private void AddVoiceChannelFields(EmbedBuilder embedBuilder, IVoiceChannel voiceChannel)
     {
         embedBuilder

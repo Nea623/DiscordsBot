@@ -2,6 +2,9 @@
 
 public class FirstMessageModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 実行したチャンネルの最初のメッセージを表示するコマンド
+    // </summary>
     [SlashCommand("firstmessage", "実行したチャンネルの最初のメッセージを表示します。")]
     public async Task FirstMessageCommandAsync()
     {

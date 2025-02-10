@@ -2,6 +2,9 @@
 
 public class ServerIconModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // サーバーのアイコンを表示するコマンド
+    // </summary>
     [SlashCommand("servericon", "サーバーのアイコンを表示します。")]
     public async Task ServerIconCommandAsync()
     {

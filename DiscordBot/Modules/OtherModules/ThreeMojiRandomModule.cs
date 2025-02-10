@@ -2,10 +2,13 @@
 
 public class ThreeMojiRandomModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // ひらがな3文字をランダムに表示するコマンド
+    // </summary>
     [SlashCommand("3moji", "ひらがな3文字をランダムに表示します。")]
     public async Task ThreeMojiCommandAsync()
     {
-        var random = new Random();
+        var random = new Random(); // 乱数生成
         var moji = new string[] { "あ", "い", "う", "え", "お",
                                   "か", "き", "く", "け", "こ",
                                   "さ", "し", "す", "せ", "そ",
@@ -24,9 +27,7 @@ public class ThreeMojiRandomModule : InteractionModuleBase<SocketInteractionCont
                                   "ぁ", "ぃ", "ぅ", "ぇ", "ぉ",
                                   "ゃ", "ゅ", "ょ", "っ" };
 
-
-
-        var result = string.Join("", moji.OrderBy(_ => random.Next()).Take(3));
+        var result = string.Join("", moji.OrderBy(_ => random.Next()).Take(3)); // 3文字をランダムに取得
         await RespondAsync(result);
     }
 }

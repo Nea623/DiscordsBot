@@ -6,6 +6,9 @@ namespace DiscordBot.Modules.PermissionModules;
 
 public class RoleModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 指定したユーザーに指定したロールを付与するコマンド
+    // </summary>
     [SlashCommand("add", "指定したユーザーに指定したロールを付与します。")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
@@ -23,6 +26,9 @@ public class RoleModule : InteractionModuleBase<SocketInteractionContext>
         await RespondAsync(embed: embedBuilder.Build());
     }
 
+    // <summary>
+    // 指定したユーザーから指定したロールを剥奪するコマンド
+    // </summary>
     [SlashCommand("remove", "指定したユーザーから指定したロールを剥奪します。")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]

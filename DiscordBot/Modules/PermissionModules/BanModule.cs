@@ -5,13 +5,9 @@ namespace DiscordBot.Modules.PermissionModules;
 
 public class BanModule : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly DiscordSocketClient _client; // Add this field
-
-    public BanModule(DiscordSocketClient client) // Add this constructor
-    {
-        _client = client;
-    }
-
+    // <summary>
+    // 指定したユーザーをBANするコマンド
+    // </summary>
     [SlashCommand("ban", "指定したユーザーをBANします。")]
     [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers)]
     [Discord.Commands.RequireBotPermission(GuildPermission.BanMembers)]
@@ -32,6 +28,9 @@ public class BanModule : InteractionModuleBase<SocketInteractionContext>
         await RespondAsync(embed: embedBuilder.Build());
     }
 
+    // <summary>
+    // 指定したユーザーのBANを解除するコマンド
+    // </summary>
     [SlashCommand("unban", "指定したユーザーのBANを解除します。")]
     [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers)]
     [Discord.Commands.RequireBotPermission(GuildPermission.BanMembers)]

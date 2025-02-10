@@ -4,10 +4,13 @@ namespace DiscordBot.Services
 {
     public class GuildService
     {
+        // <summary>
+        // 新規ユーザーが入室した際に歓迎メッセージを送信する
+        // <summary>
         public async Task WelcomeMessageAsync(SocketGuildUser user)
         {
-            SocketGuild guild = user.Guild;
-            string avatar = user.GetAvatarUrl();
+            SocketGuild guild = user.Guild; // ユーザーが入室したサーバーを取得
+            string avatar = user.GetAvatarUrl(); // ユーザーのアバターURLを取得
 
             var embedBuilder = new EmbedBuilder()
                 .WithTitle("新規ユーザーが入室しました！")

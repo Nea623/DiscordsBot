@@ -2,6 +2,9 @@
 
 public class LogResetModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // ログを消去するコマンド
+    // </summary>
     [SlashCommand("reset", "ログを消去します。(開発者専用)")]
     public async Task LogResetCommandAsync()
     {

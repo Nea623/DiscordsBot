@@ -2,6 +2,9 @@
 
 public class SlowModeModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 低速モードを指定した秒数で設定するコマンド
+    // </summary>
     [SlashCommand("slowmode", "低速モードを指定した秒数で設定します。")]
     [RequireBotPermission(GuildPermission.ManageMessages)]
     [RequireUserPermission(GuildPermission.ManageMessages)]

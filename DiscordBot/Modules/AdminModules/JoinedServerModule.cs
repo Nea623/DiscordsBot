@@ -1,6 +1,9 @@
 ﻿namespace DiscordBot.Modules.AdminModules;
 public class JoinedServerModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // Botが導入されているサーバーを一覧として表示するコマンド
+    // </summary>
     [SlashCommand("joined", "Botが導入されているサーバーを一覧として表示します。(開発者専用)")]
     public async Task JoinedServerCommandAsync()
     {

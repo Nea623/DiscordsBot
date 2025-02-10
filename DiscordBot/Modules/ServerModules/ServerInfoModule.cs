@@ -2,15 +2,18 @@
 
 public class ServerInfoModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // サーバーの情報を表示するコマンド
+    // </summary>
     [SlashCommand("serverinfo", "サーバーの情報を表示します。")]
     public async Task ServerInfoCommandAsync()
     {
-        string boost = null;
+        string boost = null; // ブーストレベルを格納する変数
 
-        if (Context.Guild.PremiumTier == PremiumTier.None) boost = "レベル0";
-        if (Context.Guild.PremiumTier == PremiumTier.Tier1) boost = "レベル1";
-        if (Context.Guild.PremiumTier == PremiumTier.Tier2) boost = "レベル2";
-        if (Context.Guild.PremiumTier == PremiumTier.Tier3) boost = "レベル3";
+        if (Context.Guild.PremiumTier == PremiumTier.None) boost = "レベル0"; // ブーストレベルが0の場合
+        if (Context.Guild.PremiumTier == PremiumTier.Tier1) boost = "レベル1"; // ブーストレベルが1の場合
+        if (Context.Guild.PremiumTier == PremiumTier.Tier2) boost = "レベル2"; // ブーストレベルが2の場合
+        if (Context.Guild.PremiumTier == PremiumTier.Tier3) boost = "レベル3"; // ブーストレベルが3の場合
 
         var embedBuilder = new EmbedBuilder()
             .WithTitle($"{Context.Guild.Name}の情報")

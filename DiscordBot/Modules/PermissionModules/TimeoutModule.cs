@@ -4,6 +4,9 @@ namespace DiscordBot.Modules.PermissionModules;
 
 public class TimeoutModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 指定したユーザーを指定した時間タイムアウトするコマンド
+    // </summary>
     [SlashCommand("timeout", "指定したユーザーを指定した時間タイムアウトします。")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
@@ -21,6 +24,9 @@ public class TimeoutModule : InteractionModuleBase<SocketInteractionContext>
         await RespondAsync(embed: embedBuilder.Build());
     }
 
+    // <summary>
+    // 指定したユーザーのタイムアウトを解除するコマンド
+    // </summary>
     [SlashCommand("untimeout", "指定したユーザーのタイムアウトを解除します。")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]

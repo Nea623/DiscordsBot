@@ -2,6 +2,9 @@
 
 public class LeaveServerModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 指定したサーバーからBotを脱退させるコマンド
+    // </summary>
     [SlashCommand("leave", "指定したサーバーからBotを脱退させます。(開発者専用)")]
     public async Task LeaveServerCommandAsync([Summary(description: "サーバーIDを入力してください。")] string Id)
     {

@@ -4,9 +4,9 @@ namespace DiscordBot.Modules.OtherModules;
 
 public class PingModule : InteractionModuleBase<SocketInteractionContext>
 {
-    /*
-     * 新pingコマンド(WebSocket PingとAPI Endpoint Pingを取得するもの)
-     *
+    /* <summary>
+    // 新pingコマンド(WebSocket PingとAPI Endpoint Pingを取得するもの)
+    // </summary>
     [IntegrationType(ApplicationIntegrationType.GuildInstall | ApplicationIntegrationType.UserInstall)]
     [SlashCommand("ping", "pingの計測を行います。")]
     public async Task PingCommandAsync()
@@ -27,7 +27,9 @@ public class PingModule : InteractionModuleBase<SocketInteractionContext>
     }
     */
 
+    // <summary>
     // 旧pingコマンド(ただ単に、アクセスできるかどうか、レスポンスタイムを取得しているだけのもの)
+    // </summary>
     [SlashCommand("ping", "pingを計測行います。")]
     public async Task PingCommandAsync([Summary(description: "URLを指定してください。")] string url = "discord.com")
     {
