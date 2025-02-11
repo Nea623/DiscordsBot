@@ -9,6 +9,10 @@ public class FirstMessageModule : InteractionModuleBase<SocketInteractionContext
     public async Task FirstMessageCommandAsync()
     {
         var message = await Context.Channel.GetMessagesAsync(0, Direction.After, 1).FlattenAsync();
-        await RespondAsync(message.First().GetJumpUrl());
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle($"{Context.Channel.Name} での最初のメッセージ:speech_balloon:")
+            .WithDescription(message.First().GetJumpUrl() +
+                           $"\n送信された日時: {message.First().CreatedAt.LocalDateTime}");
+        await RespondAsync(embed: embedBuilder.Build());
     }
 }
