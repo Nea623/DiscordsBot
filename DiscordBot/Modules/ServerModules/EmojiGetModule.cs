@@ -14,7 +14,8 @@ public class EmojiGetModule : InteractionModuleBase<SocketInteractionContext>
         var embedBuilder = new EmbedBuilder()
             .WithTitle("絵文字情報")
             .WithDescription($"絵文字名: {emote.Name}\n絵文字ID: {emote.Id}")
-            .WithImageUrl(emote.Url);
+            .WithImageUrl(emote.Url)
+            .WithColor(0x8DCE3E);
 
         await RespondAsync(embed: embedBuilder.Build());
     }

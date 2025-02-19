@@ -17,8 +17,8 @@ public class JoinedServerModule : InteractionModuleBase<SocketInteractionContext
             for (int i = 0; i < guilds.Count(); i++)
             {
                 embedBuilder.Description += "サーバー名: " + "[" + guilds.Skip(i).FirstOrDefault().Name + "]" + " / " + "サーバーID: " + "[" + guilds.Skip(i).FirstOrDefault().Id + "]" + "\n";
-                embedBuilder.Color = new Color(100, 230, 90);
             }
+            embedBuilder.WithColor(0x8DCE3E);
             await RespondAsync(embed: embedBuilder.Build(), ephemeral: true);
         }
         else // 指定したユーザーIDでない場合
