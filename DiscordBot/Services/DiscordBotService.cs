@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using DiscordBot.Modules.ServerModules.RolePanelModule;
 using Microsoft.Win32.SafeHandles;
 
 namespace DiscordBot.Services;
@@ -14,6 +15,7 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
 
         client.Ready += Ready;
         client.UserJoined += EventHandler;
+        client.ReactionAdded += ReactionRoleHandler.OnReactionAddedAsync;
 
         await interactionHandler.InitializeAsync();
         await client.LoginAsync(TokenType.Bot, configuration["DiscordBot:Token"]);

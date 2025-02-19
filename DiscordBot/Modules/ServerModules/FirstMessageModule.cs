@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Modules.OtherModules;
+﻿namespace DiscordBot.Modules.ServerModules;
 
 public class FirstMessageModule : InteractionModuleBase<SocketInteractionContext>
 {
