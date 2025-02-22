@@ -1,5 +1,4 @@
 ﻿namespace DiscordBot.Modules.OtherModules;
-
 public class DiceModule : InteractionModuleBase<SocketInteractionContext>
 {
     // <summary>

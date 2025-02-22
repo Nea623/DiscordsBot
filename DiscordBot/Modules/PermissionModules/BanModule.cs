@@ -8,7 +8,7 @@ public class BanModule : InteractionModuleBase<SocketInteractionContext>
     // <summary>
     // 指定したユーザーをBANするコマンド
     // </summary>
-    [SlashCommand("ban", "指定したユーザーをBANします。")]
+    [SlashCommand("ban", "指定したユーザーをBANします。(権限必要)")]
     [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers)]
     [Discord.Commands.RequireBotPermission(GuildPermission.BanMembers)]
     public async Task BanCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Discord.Interactions.Summary(description: "理由を入力してください。")][Remainder] string reason = null)
@@ -31,7 +31,7 @@ public class BanModule : InteractionModuleBase<SocketInteractionContext>
     // <summary>
     // 指定したユーザーのBANを解除するコマンド
     // </summary>
-    [SlashCommand("unban", "指定したユーザーのBANを解除します。")]
+    [SlashCommand("unban", "指定したユーザーのBANを解除します。(権限必要)")]
     [Discord.Commands.RequireUserPermission(GuildPermission.BanMembers)]
     [Discord.Commands.RequireBotPermission(GuildPermission.BanMembers)]
     public async Task UnBanCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketUser targetUser)

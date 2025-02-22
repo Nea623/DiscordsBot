@@ -7,7 +7,7 @@ public class TimeoutModule : InteractionModuleBase<SocketInteractionContext>
     // <summary>
     // 指定したユーザーを指定した時間タイムアウトするコマンド
     // </summary>
-    [SlashCommand("timeout", "指定したユーザーを指定した時間タイムアウトします。")]
+    [SlashCommand("timeout", "指定したユーザーを指定した時間タイムアウトします。(権限必要)")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
     public async Task TimeoutCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Discord.Interactions.Summary(description: "// 時間設定はm, h, dで設定。(minutes(分)hours(時)day(日))")] [Remainder] TimeSpan span)
@@ -27,7 +27,7 @@ public class TimeoutModule : InteractionModuleBase<SocketInteractionContext>
     // <summary>
     // 指定したユーザーのタイムアウトを解除するコマンド
     // </summary>
-    [SlashCommand("untimeout", "指定したユーザーのタイムアウトを解除します。")]
+    [SlashCommand("untimeout", "指定したユーザーのタイムアウトを解除します。(権限必要)")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
     public async Task RoleRemoveCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser)

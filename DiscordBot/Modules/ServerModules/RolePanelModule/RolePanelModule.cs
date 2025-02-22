@@ -13,13 +13,13 @@ public class RolePanelModule : InteractionModuleBase<SocketInteractionContext>
     {
         var embedbuilder = new EmbedBuilder()
             .WithTitle(title)
-            .WithDescription($"1️⃣: {role.Mention}")
+            .WithDescription($"🇦 {role.Mention}")
             .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
             .WithColor(0x8DCE3E);
 
         await RespondAsync(embed: embedbuilder.Build());
         var message = await Context.Interaction.GetOriginalResponseAsync();
-        await message.AddReactionAsync(new Emoji("1️⃣"));
+        await message.AddReactionAsync(new Emoji("🇦"));
     }
 
     // <summary>
@@ -61,7 +61,16 @@ public class RolePanelModule : InteractionModuleBase<SocketInteractionContext>
             return;
         }
 
-        string[] emoji = { "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟" };
+        string[] emoji = { "\uD83C\uDDE6",   // A
+                           "\uD83C\uDDE7",   // B
+                           "\uD83C\uDDE8",   // C
+                           "\uD83C\uDDE9",   // D
+                           "\uD83C\uDDEA",   // E
+                           "\uD83C\uDDEB",   // F
+                           "\uD83C\uDDEC",   // G
+                           "\uD83C\uDDED",   // H
+                           "\uD83C\uDDEE",   // I
+                           "\uD83C\uDDEF" }; // J
         var nextEmoji = GetNextAvailableEmoji(emoji, lastEmbedMessage.Embeds.First().Description);
 
         if (nextEmoji == null)
@@ -72,7 +81,7 @@ public class RolePanelModule : InteractionModuleBase<SocketInteractionContext>
 
         var nextReaction = new Emoji(nextEmoji);
         var embed = lastEmbedMessage.Embeds.First().ToEmbedBuilder();
-        embed.Description += $"\n{nextEmoji}: {role.Mention}";
+        embed.Description += $"\n{nextEmoji} {role.Mention}";
 
         if (lastEmbedMessage is IUserMessage userMessage)
         {

@@ -43,7 +43,6 @@ public class ReactionRoleHandler
 
             if (user.Roles.Any(x => x.Id == roleId))
             {
-                var textchannel = guild.GetTextChannel(message.Channel.Id);
                 await user.RemoveRoleAsync(role);
 
                 var embedBuilder = new EmbedBuilder()
@@ -56,7 +55,6 @@ public class ReactionRoleHandler
             }
             else
             {
-                var textchannel = guild.GetTextChannel(message.Channel.Id);
                 await user.AddRoleAsync(role);
 
                 var embedBuilder = new EmbedBuilder()
@@ -67,7 +65,6 @@ public class ReactionRoleHandler
                 await Task.Delay(10000);
                 await msg.DeleteAsync();
             }
-
         });
         await message.RemoveReactionAsync(reaction.Emote, reaction.UserId);
     }

@@ -9,7 +9,7 @@ public class RoleModule : InteractionModuleBase<SocketInteractionContext>
     // <summary>
     // 指定したユーザーに指定したロールを付与するコマンド
     // </summary>
-    [SlashCommand("add", "指定したユーザーに指定したロールを付与します。")]
+    [SlashCommand("add", "指定したユーザーに指定したロールを付与します。(権限必要)")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
     public async Task RoleAddCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Remainder] IRole roleId)
@@ -29,7 +29,7 @@ public class RoleModule : InteractionModuleBase<SocketInteractionContext>
     // <summary>
     // 指定したユーザーから指定したロールを剥奪するコマンド
     // </summary>
-    [SlashCommand("remove", "指定したユーザーから指定したロールを剥奪します。")]
+    [SlashCommand("remove", "指定したユーザーから指定したロールを剥奪します。(権限必要)")]
     [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
     [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
     public async Task RoleRemoveCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Remainder] IRole roleId)
