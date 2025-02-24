@@ -4,6 +4,9 @@ namespace DiscordBot.Modules.UserModules;
 
 public class UserInfoModule : InteractionModuleBase<SocketInteractionContext>
 {
+    // <summary>
+    // 指定されたユーザーの情報を表示するコマンド
+    // </summary>
     [SlashCommand("userinfo", "指定されたユーザーの情報を表示します。")]
     public async Task UserInfoCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] [Remainder] IGuildUser user = null)
     {

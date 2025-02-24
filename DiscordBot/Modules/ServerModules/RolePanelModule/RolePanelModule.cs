@@ -145,6 +145,22 @@ public class RolePanelModule : InteractionModuleBase<SocketInteractionContext>
     }
 
     // <summary>
+    // 認証ロール用のパネルを作成するコマンド
+    // </summary>
+    [SlashCommand("verify", "認証ロール用のパネルを作成します。")]
+    public async Task VerifyCommandAsync(IRole role)
+    {
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle("認証ロール付与")
+            .WithDescription($"✅: {role.Mention}")
+            .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
+            .WithColor(0x8DCE3E);
+        await RespondAsync(embed: embedBuilder.Build());
+        var message = await Context.Interaction.GetOriginalResponseAsync();
+        await message.AddReactionsAsync([new Emoji("✅")]);
+    }
+
+    // <summary>
     // 次に使用可能な絵文字を取得します。
     // </summary>
     public string GetNextAvailableEmoji(string[] emoji, string description)
