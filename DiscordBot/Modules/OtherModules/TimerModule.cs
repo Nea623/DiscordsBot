@@ -8,7 +8,7 @@ public class TimerModule : InteractionModuleBase<SocketInteractionContext>
     // タイマーをセットするコマンド
     // </summary>
     [SlashCommand("timer", "タイマーをセットします。")]
-    public async Task TimerCommandAsync([Discord.Interactions.Summary(description: "タイマーの時間を入力してください。")][Remainder] TimeSpan TimerTime)
+    public async Task TimerCommandAsync([Discord.Interactions.Summary(description: "m=分, h=時を数字の後に入力してください。")][Remainder] TimeSpan TimerTime)
     {
         if (TimerTime.TotalSeconds <= 0) TimerTime = TimeSpan.FromSeconds(1);
         await RespondAsync($"タイマーを{TimerTime.TotalSeconds}秒にセットしました。\n" +
