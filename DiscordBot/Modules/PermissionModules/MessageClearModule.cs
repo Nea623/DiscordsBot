@@ -13,6 +13,14 @@ public class MessageClearModule : InteractionModuleBase<SocketInteractionContext
         var channel = Context.Channel as SocketTextChannel;
         var items = await channel.GetMessagesAsync(delNumber).FlattenAsync();
         await channel.DeleteMessagesAsync(items);
-        await RespondAsync($"{delNumber}個のメッセージを削除しました:wastebasket:");
+
+        // メッセージを送信して保持
+        await RespondAsync($"{delNumber}個のメッセージを削除しました :wastebasket:");
+
+        // 5秒待ってから削除
+        await Task.Delay(5000);
+        // 応答メッセージを取得して削除
+        var responseMessage = await Context.Interaction.GetOriginalResponseAsync();
+        await responseMessage.DeleteAsync();
     }
 }
