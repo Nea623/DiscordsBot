@@ -21,6 +21,6 @@ public class MessageClearModule : InteractionModuleBase<SocketInteractionContext
         await Task.Delay(5000);
         // 応答メッセージを取得して削除
         var responseMessage = await Context.Interaction.GetOriginalResponseAsync();
-        await responseMessage.DeleteAsync();
+        await responseMessage.DeleteAsync();    
     }
 }

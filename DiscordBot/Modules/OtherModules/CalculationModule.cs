@@ -1,6 +1,6 @@
 ﻿namespace DiscordBot.Modules.OtherModules;
 
-[Group("cal", "cal commands - group.")]
+[Group("calc", "calc commands - group.")]
 public class CalculationModule : InteractionModuleBase<SocketInteractionContext>
 {
     // <summary>

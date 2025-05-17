@@ -114,31 +114,36 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
     // <summary>
     // 日付を越えてユーザーごとに一番最初のメッセージにリアクションをつける。
     // </summary>
-    public async Task MessageReceivedAsync(SocketMessage message)
+    public Task MessageReceivedAsync(SocketMessage message)
     {
-        // システムメッセージは無視
-        if (message.Type != MessageType.Default)
-            return;
-
-        // Bot自身のメッセージも無視
-        if (message.Author.IsBot) return;
-
-        var userId = message.Author.Id;
-        var today = DateTime.Now.Date;
-
-        if (_userReactionDates.TryGetValue(userId, out DateTime lastReactedDate))
+        _ = Task.Run(async () =>
         {
-            // すでに今日リアクション済みなら何もしない
-            if (lastReactedDate == today)
+            // システムメッセージは無視
+            if (message.Type != MessageType.Default)
                 return;
-        }
 
-        // リアクションを追加
-        var emoji = Emote.Parse("<:good_cat:1371429892503240755>");
-        await message.AddReactionAsync(emoji);
+            // Bot自身のメッセージも無視
+            if (message.Author.IsBot) return;
 
-        // ユーザーのリアクション記録を更新
-        _userReactionDates[userId] = today;
+            var userId = message.Author.Id;
+            var today = DateTime.Now.Date;
+
+            if (_userReactionDates.TryGetValue(userId, out DateTime lastReactedDate))
+            {
+                // すでに今日リアクション済みなら何もしない
+                if (lastReactedDate == today)
+                    return;
+            }
+
+            // リアクションを追加
+            var emoji = Emote.Parse("<:good_cat:1371429892503240755>");
+            await message.AddReactionAsync(emoji);
+
+            // ユーザーのリアクション記録を更新
+            _userReactionDates[userId] = today;
+        });
+
+        return Task.CompletedTask;
     }
 
     // <summary>
@@ -146,12 +151,15 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
     // </summary>
     private void InitializeDailyResetTimer()
     {
-        DateTime now = DateTime.Now;
-        DateTime nextMidnight = now.Date.AddDays(1); // 翌日0時
-        TimeSpan initialDelay = nextMidnight - now;
+        _ = Task.Run(async () =>
+        {
+            DateTime now = DateTime.Now;
+            DateTime nextMidnight = now.Date.AddDays(1); // 翌日0時
+            TimeSpan initialDelay = nextMidnight - now;
 
-        // 以降は毎日24時間間隔でリセット
-        _dailyResetTimer = new Timer(ResetDailyReactions, null, initialDelay, TimeSpan.FromDays(1));
+            // 以降は毎日24時間間隔でリセット
+            _dailyResetTimer = new Timer(ResetDailyReactions, null, initialDelay, TimeSpan.FromDays(1));
+        });
     }
 
     // <summary>
@@ -159,42 +167,50 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
     // </summary>
     private void ResetDailyReactions(object state)
     {
-        Console.WriteLine($"[{DateTime.Now}] ユーザーのリアクション記録をリセットしました。");
-        _userReactionDates.Clear();
+        _ = Task.Run(async () =>
+        {
+            Console.WriteLine($"[{DateTime.Now}] ユーザーのリアクション記録をリセットしました。");
+            _userReactionDates.Clear();
+        });
     }
 
     // <summary>
     // 挨拶のメッセージを送信する(新規参加者・システムチャンネル限定)
     // </summary>
-    public async Task SendGreetingMessage(SocketMessage message)
+    private Task SendGreetingMessage(SocketMessage message)
     {
-
-        // Bot自身のメッセージは無視
-        if (message.Author.IsBot) return;
-
-        // メッセージに「よろしく」が含まれているかチェック
-        if (!message.Content.Contains("よろしく", StringComparison.OrdinalIgnoreCase)) return;
-
-        // ユーザーがSocketGuildUserであるか確認
-        if (message.Author is not SocketGuildUser guildUser) return;
-
-        // システムチャンネルかどうか確認
-        var guild = guildUser.Guild;
-        var systemChannel = guild.SystemChannel;
-        if (systemChannel == null || message.Channel.Id != systemChannel.Id)
+        _ = Task.Run(async () =>
         {
-            return; // システムチャンネル以外なら無視
-        }
+            // Bot自身のメッセージは無視
+            if (message.Author.IsBot) return;
 
-        // 入室から5分以内であるか確認
-        var joinedAt = guildUser.JoinedAt;
-        if (joinedAt == null) return; // 加入時刻が取得できない場合は無視
+            // メッセージに「よろしく」が含まれているかチェック
+            if (!message.Content.Contains("よろしく", StringComparison.OrdinalIgnoreCase)) return;
 
-        // 現在時刻との差分が5分以内か判定
-        var timeSinceJoin = DateTimeOffset.UtcNow - joinedAt.Value;
-        if (timeSinceJoin > TimeSpan.FromMinutes(5)) return;
-        {
-            await message.Channel.SendMessageAsync("よろしくお願いします～！<:good_cat:1371429892503240755>");
-        }
+            // ユーザーがSocketGuildUserであるか確認
+            if (message.Author is not SocketGuildUser guildUser) return;
+
+            // システムチャンネルかどうか確認
+            var guild = guildUser.Guild;
+            var systemChannel = guild.SystemChannel;
+            if (systemChannel == null || message.Channel.Id != systemChannel.Id)
+            {
+                return; // システムチャンネル以外なら無視
+            }
+
+            // 入室から5分以内であるか確認
+            var joinedAt = guildUser.JoinedAt;
+            if (joinedAt == null) return; // 加入時刻が取得できない場合は無視
+
+            // 現在時刻との差分が5分以内か判定
+            var timeSinceJoin = DateTimeOffset.UtcNow - joinedAt.Value;
+            if (timeSinceJoin > TimeSpan.FromMinutes(5)) return;
+            {
+                await message.Channel.SendMessageAsync("よろしくお願いします～！<:good_cat:1371429892503240755>");
+            }
+           
+        });
+
+        return Task.CompletedTask;
     }
 }
