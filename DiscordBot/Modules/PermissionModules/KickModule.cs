@@ -8,8 +8,8 @@ public class KickModule : InteractionModuleBase<SocketInteractionContext>
     // 指定したユーザーを追放するコマンド
     // </summary>
     [SlashCommand("kick", "指定したユーザーを追放します。(権限必要)")]
-    [Discord.Commands.RequireBotPermission(GuildPermission.KickMembers)]
-    [Discord.Commands.RequireUserPermission(GuildPermission.KickMembers)]
+    [Discord.Interactions.RequireBotPermission(GuildPermission.KickMembers)]
+    [Discord.Interactions.RequireUserPermission(GuildPermission.KickMembers)]
     public async Task KickCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Discord.Interactions.Summary(description: "理由を入力してください。")] [Remainder] string reason = null)
     {
         if (reason == null)

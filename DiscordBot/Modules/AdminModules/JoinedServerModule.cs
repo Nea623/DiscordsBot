@@ -10,7 +10,7 @@ public class JoinedServerModule : InteractionModuleBase<SocketInteractionContext
         var guilds = Context.Client.Guilds;
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
-        if (Context.User.Id == 1023888743360364606) // ユーザーIDを指定
+        if (Context.User.Id == 1287268215499784242) // ユーザーIDを指定
         {
             embedBuilder.Title = "導入されているサーバー";
 

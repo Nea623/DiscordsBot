@@ -10,8 +10,9 @@ public class RoleModule : InteractionModuleBase<SocketInteractionContext>
     // 指定したユーザーに指定したロールを付与するコマンド
     // </summary>
     [SlashCommand("add", "指定したユーザーに指定したロールを付与します。(権限必要)")]
-    [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
-    [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
+    [Discord.Interactions.RequireUserPermission(GuildPermission.ManageRoles)]
+    [Discord.Interactions.RequireBotPermission(GuildPermission.ManageRoles)]
+
     public async Task RoleAddCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Remainder] IRole roleId)
     {
         await targetUser.AddRoleAsync(roleId);
@@ -30,8 +31,8 @@ public class RoleModule : InteractionModuleBase<SocketInteractionContext>
     // 指定したユーザーから指定したロールを剥奪するコマンド
     // </summary>
     [SlashCommand("remove", "指定したユーザーから指定したロールを剥奪します。(権限必要)")]
-    [Discord.Commands.RequireBotPermission(GuildPermission.ModerateMembers)]
-    [Discord.Commands.RequireUserPermission(GuildPermission.ModerateMembers)]
+    [Discord.Interactions.RequireUserPermission(GuildPermission.ManageRoles)]
+    [Discord.Interactions.RequireBotPermission(GuildPermission.ManageRoles)]
     public async Task RoleRemoveCommandAsync([Discord.Interactions.Summary(description: "指定するユーザーを選択してください。")] SocketGuildUser targetUser, [Remainder] IRole roleId)
     {
         await targetUser.RemoveRoleAsync(roleId);

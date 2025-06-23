@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using DiscordBot.Modules.OtherModules;
 
 namespace DiscordBot.Services;
 
@@ -19,6 +20,16 @@ public class InteractionHandler(DiscordSocketClient client, InteractionService i
     {
         try
         {
+            // ボタン押下などのインタラクションもここに来る
+            if (interaction is SocketMessageComponent component &&
+                component.Data.CustomId.StartsWith("roulette_retry:"))
+            {
+                // 手動でモジュールを呼び出して処理する（依存性注入が必要なら書き換えてください）
+                var module = new RouletteModule();  // ← 実際にはDIで生成するのが理想
+                await module.HandleComponent(component);
+                return;
+            }
+
             var context = new SocketInteractionContext(client, interaction);
             var result = await interactions.ExecuteCommandAsync(context, services);
 
@@ -33,9 +44,25 @@ public class InteractionHandler(DiscordSocketClient client, InteractionService i
 
     private Task OnInteractionExecuted(ICommandInfo command, IInteractionContext context, IResult result)
     {
-        logger.LogInformation("[コマンド実行] {UserName}({UserId}), command={ModuleName}.{MethodName}, guild_id={GuildId}, channel_id={ChannelId}", (context.User.GlobalName ?? context.User.Username), context.User.Id, command.Module.Name, command.MethodName, context.Guild?.Id, context.Channel.Id);
+        var userName = context.User?.GlobalName ?? context.User?.Username ?? "不明";
+        var userId = context.User?.Id.ToString() ?? "不明";
+
+        var moduleName = command?.Module?.Name ?? "不明";
+        var methodName = command?.MethodName ?? "不明";
+
+        var guildId = context.Guild?.Id.ToString() ?? "DM";
+        var channelId = context.Channel?.Id.ToString() ?? "不明";
+
+        logger.LogInformation(
+            "[コマンド実行] {UserName}({UserId}), command={ModuleName}.{MethodName}, guild_id={GuildId}, channel_id={ChannelId}",
+            userName, userId, moduleName, methodName, guildId, channelId
+        );
+
         if (!result.IsSuccess)
+        {
             _ = Task.Run(() => HandleInteractionExecutedResult(context.Interaction, result));
+        }
+
         return Task.CompletedTask;
     }
 

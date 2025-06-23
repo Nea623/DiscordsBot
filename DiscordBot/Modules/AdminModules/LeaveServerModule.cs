@@ -8,7 +8,7 @@ public class LeaveServerModule : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("leave", "指定したサーバーからBotを脱退させます。(開発者専用)")]
     public async Task LeaveServerCommandAsync([Summary(description: "サーバーIDを入力してください。")] string Id)
     {
-        if (Context.User.Id == 1023888743360364606) // ユーザーIDを指定
+        if (Context.User.Id == 1287268215499784242) // ユーザーIDを指定
         {
             var name = Context.Client.Guilds;
             IGuild guild = Context.Client.GetGuild(ulong.Parse(Id));

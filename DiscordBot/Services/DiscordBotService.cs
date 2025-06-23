@@ -2,6 +2,11 @@
 using Microsoft.Extensions.Hosting;
 using DiscordBot.Modules.ServerModules.RolePanelModule;
 using Microsoft.Win32.SafeHandles;
+using Discord.Rest;
+using Discord;
+using System.ComponentModel;
+using DiscordBot.Modules.PermissionModules;
+using DiscordBot.Modules.OtherModules;
 
 namespace DiscordBot.Services;
 
@@ -13,16 +18,33 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
     // '_dailyResetTimer' を null 許容型に変更することで、CS8618 エラーを解消します。  
     private Timer _dailyResetTimer;
 
+    private readonly ulong _logChannelId = 1375786600247591043;
+    private Dictionary<ulong, IReadOnlyCollection<RestInviteMetadata>> _cachedInvites = new();
+
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         client.Log += Log;
         interactions.Log += Log;
 
         client.Ready += Ready;
+        client.Ready += ReadyAsync;
         client.UserJoined += EventHandler;
+        client.ButtonExecuted += ButtonHandler;
+        client.UserJoined += UserJoinedAsync;
         client.ReactionAdded += ReactionRoleHandler.OnReactionAddedAsync;
         client.MessageReceived += MessageReceivedAsync;
         client.MessageReceived += SendGreetingMessage;
+        client.UserLeft += UserLeftAsync;
+
+        client.InteractionCreated += async interaction =>
+        {
+            if (interaction is SocketMessageComponent component &&
+                component.Data.CustomId.StartsWith("roulette_retry:"))
+            {
+                var module = new RouletteModule();
+                await module.HandleComponent(component);
+            }
+        };
 
 
 
@@ -53,7 +75,6 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
         base.StopAsync(cancellationToken);
         return client.StopAsync();
     }
-
 
     // <summary>
     // ログ出力
@@ -87,7 +108,6 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
                 // ApplicationCommands の登録をここで行う。
                 await interactions.RegisterCommandsToGuildAsync(ulong.Parse(configuration["DiscordBot:GuildId"] ?? ""));
                 await interactions.RegisterCommandsToGuildAsync(ulong.Parse(configuration["DiscordBot:GuildId2"] ?? ""));
-                await interactions.RegisterCommandsToGuildAsync(ulong.Parse(configuration["DiscordBot:GuildId3"] ?? ""));
             }
             catch (Exception ex)
             {
@@ -109,6 +129,95 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
         });
 
         return Task.CompletedTask;
+    }
+
+    // <summary>
+    // 常時起動しているBotのイベント
+    // </summary>
+    private Task ButtonHandler(SocketMessageComponent component)
+    {
+        _ = Task.Run(async () =>
+        {
+            await RoleModule.HandleRolePaginationAsync(component, client);
+        });
+
+        return Task.CompletedTask;
+    }
+
+    // <summary>
+    // Botが起動した際にキャッシュを開始する
+    // </summary>
+    public async Task ReadyAsync()
+    {
+        Console.WriteLine("🔁 Ready: キャッシュ開始");
+        Console.WriteLine($"🌐 参加中のギルド数: {client.Guilds.Count}");
+
+        foreach (var guild in client.Guilds)
+        {
+            Console.WriteLine($"📡 {guild.Name} の招待を取得中...");
+
+            try
+            {
+                var invites = await guild.GetInvitesAsync();
+                _cachedInvites[guild.Id] = invites;
+                Console.WriteLine($"✅ Guild「{guild.Name}」の招待リンクを {invites.Count} 件キャッシュしました");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Guild「{guild.Name}」の招待リンク取得に失敗: {ex.GetType().Name} - {ex.Message}");
+            }
+        }
+
+        Console.WriteLine("✅ Ready: 全ギルドのキャッシュ完了");
+    }
+
+    // <summary>
+    // 招待記録付きのユーザー参加イベント
+    // </summary>
+    public async Task UserJoinedAsync(SocketGuildUser user)
+    {
+        var guild = user.Guild;
+        var newInvites = await guild.GetInvitesAsync();
+        var oldInvites = _cachedInvites.ContainsKey(guild.Id)
+            ? _cachedInvites[guild.Id]
+            : Array.Empty<RestInviteMetadata>();
+
+        RestInviteMetadata usedInvite = null;
+
+        foreach (var invite in newInvites)
+        {
+            var oldInvite = oldInvites.FirstOrDefault(x => x.Code == invite.Code);
+            if (oldInvite != null && invite.Uses > oldInvite.Uses)
+            {
+                usedInvite = invite;
+                break;
+            }
+        }
+
+        var logChannel = guild.GetTextChannel(_logChannelId);
+        if (logChannel == null)
+        {
+            Console.WriteLine("チャンネルが見つかりませんでした。");
+            return;
+        }
+
+        if (usedInvite != null)
+        {
+            var embedBuilder = new EmbedBuilder()
+                .WithTitle($"{user.GlobalName}が参加しました！")
+                .AddField("使用された招待コード", $"`{usedInvite.Code}`", true)
+                .AddField("作成者", $"{usedInvite.Inviter?.Mention}" ?? "不明", true)
+                .AddField("使用回数", usedInvite.Uses.ToString(), true)
+                .WithThumbnailUrl(user.GetAvatarUrl())
+                .WithColor(0x8DCE3E);
+            await logChannel.SendMessageAsync(embed: embedBuilder.Build());
+        }
+        else
+        {
+            await logChannel.SendMessageAsync($"{user.Mention} が参加しましたが、使用された招待リンクを特定できませんでした。");
+        }
+
+        _cachedInvites[guild.Id] = newInvites;
     }
 
     // <summary>
@@ -136,7 +245,7 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
             }
 
             // リアクションを追加
-            var emoji = Emote.Parse("<:good_cat:1371429892503240755>");
+            var emoji = Emote.Parse("<:good_cat:1376168787375554630>");
             await message.AddReactionAsync(emoji);
 
             // ユーザーのリアクション記録を更新
@@ -206,11 +315,37 @@ public class DiscordBotService(DiscordSocketClient client, InteractionService in
             var timeSinceJoin = DateTimeOffset.UtcNow - joinedAt.Value;
             if (timeSinceJoin > TimeSpan.FromMinutes(5)) return;
             {
-                await message.Channel.SendMessageAsync("よろしくお願いします～！<:good_cat:1371429892503240755>");
+                await message.Channel.SendMessageAsync("よろしくお願いします～！<:good_cat:1376168787375554630>");
             }
-           
+
         });
 
         return Task.CompletedTask;
     }
+
+    // <summary>
+    // ユーザーが退出した際のログを記録する
+    // </summary>
+    private async Task UserLeftAsync(SocketGuild guild, SocketUser user)
+    {
+        var logChannel = guild.GetTextChannel(_logChannelId); 
+        if (logChannel == null)
+        {
+            Console.WriteLine("チャンネルが見つかりませんでした。");
+            return;
+        }
+
+        // 退出日時をJSTに変換
+        var jstNow = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(9));
+        var embedBuilder = new EmbedBuilder()
+            .WithTitle($"{user.GlobalName ?? user.Username} が退出しました。")
+            .AddField("ユーザー", $"{user.Mention}", true)
+            .AddField("ID", $"`{user.Id}`", true)
+            .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
+            .WithFooter($"退出日時(JST): {jstNow:yyyy/MM/dd HH:mm:ss}")
+            .WithColor(0xFF0000); // 赤色
+
+        await logChannel.SendMessageAsync(embed: embedBuilder.Build());
+    }
+
 }

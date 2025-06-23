@@ -12,8 +12,8 @@ public class UserAvatarModule : InteractionModuleBase<SocketInteractionContext>
 
         var embedBuilder = new EmbedBuilder()
             .WithTitle("Avatar Link")
-            .WithUrl(user.GetAvatarUrl(size: 1024))
-            .WithImageUrl(user.GetAvatarUrl(size: 1024))
+            .WithUrl(user.GetDisplayAvatarUrl(size: 1024))
+            .WithImageUrl(user.GetDisplayAvatarUrl(size: 1024))
             .WithFooter($"実行者: {Context.User.GlobalName ?? Context.User.Username}", Context.User.GetDisplayAvatarUrl())
             .WithColor(0x8DCE3E);
 
